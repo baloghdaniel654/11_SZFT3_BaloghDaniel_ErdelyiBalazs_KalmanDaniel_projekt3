@@ -110,6 +110,19 @@ class Program
         }
 
 
+        Console.ForegroundColor = healthColor;
+        Console.SetCursorPosition(0, 22);
+        Console.Write("Health: ");
+        for (int i = 0; i < playerHealth; i++)
+        {
+            Console.Write("█");
+        }
+        Console.ResetColor();
+        Console.WriteLine();
+
+
+        Console.SetCursorPosition(0, 23);
+        Console.Write($"Talisman: {talismanCount}");
     }
 
     static void MovePlayer(ConsoleKey key)
