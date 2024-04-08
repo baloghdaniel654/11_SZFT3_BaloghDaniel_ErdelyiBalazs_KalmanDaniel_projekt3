@@ -77,8 +77,73 @@ class Program
         map[18, 20] = 'O';
     }
 
+    static void InitializeJungleMap()
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("2. pálya - Dzsungel");
+
+        map = new char[21, 41];
 
 
+        for (int i = 0; i < 21; i++)
+        {
+            for (int j = 0; j < 41; j++)
+            {
+                if ((i == 0 || i == 20) && (j >= 0 && j < 41))
+                {
+                    map[i, j] = '#';
+                }
+                else if ((j == 0 || j == 40) && (i >= 0 && i < 21))
+                {
+                    map[i, j] = '#';
+                }
+                else
+                {
+                    map[i, j] = ' ';
+                }
+            }
+        }
+
+
+        map[playerY, playerX] = 'X';
+
+
+        map[2, 20] = 'O';
+    }
+
+    static void InitializeDesertMap()
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("3. pálya - Sivatag");
+
+        map = new char[21, 41];
+
+
+        for (int i = 0; i < 21; i++)
+        {
+            for (int j = 0; j < 41; j++)
+            {
+                if ((i == 0 || i == 20) && (j >= 0 && j < 41))
+                {
+                    map[i, j] = '#';
+                }
+                else if ((j == 0 || j == 40) && (i >= 0 && i < 21))
+                {
+                    map[i, j] = '#';
+                }
+                else
+                {
+                    map[i, j] = ' ';
+                }
+            }
+        }
+
+
+        map[playerY, playerX] = 'X';
+
+
+        map[10, 2] = 'O';
+    }
 
     static void DrawMap()
     {
@@ -196,7 +261,20 @@ class Program
         }
     }
 
+    static void PlayerHitEnemy()
+    {
 
+        playerHealth--;
+
+        talismanCount++;
+
+        healthColor = ConsoleColor.Green;
+
+        if (playerHealth <= 0)
+        {
+            GameOver();
+        }
+    }
 
     static void GameOver()
     {
