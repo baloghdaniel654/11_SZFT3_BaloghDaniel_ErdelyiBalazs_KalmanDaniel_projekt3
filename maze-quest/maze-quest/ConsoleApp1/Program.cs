@@ -322,10 +322,43 @@ class Program
 
     static void GameOver()
     {
-        Console.Clear();
-        Console.WriteLine("Game Over!");
-        Console.WriteLine("Press any key to exit.");
-        Console.ReadKey();
-        Environment.Exit(0);
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("---- Játék vége ----");
+            Console.WriteLine("Pontszám: " + talismanCount);
+            Console.WriteLine("[1] Újraindítás");
+            Console.WriteLine("[2] Kilépés");
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.D1:
+                    if (currentLevel == 1)
+                    {
+                        InitializeCaveMap();
+                        break;
+                    }
+                    else if (currentLevel == 2)
+                    {
+                        InitializeDesertMap();
+                        break;
+                    }
+                    else if (currentLevel == 3)
+                    {
+                        InitializeJungleMap();
+                        break;
+                    }
+                    else 
+                    { 
+                        Environment.Exit(0);
+                        break;
+                    }
+                case ConsoleKey.D2:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
     }
 }
