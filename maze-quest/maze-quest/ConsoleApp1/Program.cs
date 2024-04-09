@@ -146,8 +146,11 @@ class Program
 
     static void InitializeCaveMap()
     {
+        Console.Clear();
         Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("---- Maze Quest ----");
         Console.WriteLine("1. pálya - Barlang");
+        System.Threading.Thread.Sleep(3000);
 
         map = new char[21, 41];
 
@@ -176,8 +179,11 @@ class Program
 
     static void InitializeJungleMap()
     {
+        Console.Clear();
         Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("---- Maze Quest ----");
         Console.WriteLine("2. pálya - Dzsungel");
+        System.Threading.Thread.Sleep(3000);
 
         map = new char[21, 41];
 
@@ -206,8 +212,11 @@ class Program
 
     static void InitializeDesertMap()
     {
+        Console.Clear();
         Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("---- Maze Quest ----");
         Console.WriteLine("3. pálya - Sivatag");
+        System.Threading.Thread.Sleep(3000);
 
         map = new char[21, 41];
 
@@ -298,7 +307,7 @@ class Program
     static void DrawMap()
     {
         Console.SetCursorPosition(0, 0);
-
+        Console.WriteLine("---- Maze Quest ----");
         for (int i = 0; i < 21; i++)
         {
             for (int j = 0; j < 41; j++)
