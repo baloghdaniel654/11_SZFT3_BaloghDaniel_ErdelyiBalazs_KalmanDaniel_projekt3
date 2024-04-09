@@ -16,6 +16,28 @@ class Program
 
     static void Main(string[] args)
     {
+        bool playing = true;
+
+        while (playing)
+        {
+            Console.Clear();
+            Console.WriteLine("---- Maze Quest ----");
+            Console.WriteLine("[1] Játék indítása");
+            Console.WriteLine("[2] Kilépés");
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.D1:
+                    playing = false;
+                    break;
+                case ConsoleKey.D2:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
+        
         Console.CursorVisible = false;
 
         while (true)
