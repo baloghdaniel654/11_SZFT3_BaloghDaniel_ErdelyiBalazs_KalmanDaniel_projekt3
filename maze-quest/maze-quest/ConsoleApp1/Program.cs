@@ -11,8 +11,8 @@ class Program
     static ConsoleColor playerColor = ConsoleColor.Blue;
     static ConsoleColor enemyColor = ConsoleColor.Red;
     static ConsoleColor healthColor = ConsoleColor.Green;
-    static int enemyX;
-    static int enemyY;
+    static int[] enemyX;
+    static int[] enemyY;
 
     static void Main(string[] args)
     {
@@ -51,42 +51,74 @@ class Program
 
     static void InitializeEnemies()
     {
-        Random rnd = new Random();
-        enemyX = rnd.Next(1, map.GetLength(1) - 1);
-        enemyY = rnd.Next(1, map.GetLength(0) - 1);
-        map[enemyY, enemyX] = 'E';
+        if (currentLevel == 1)
+        {
+            enemyX = new int[1];
+            enemyY = new int[1];
+            Random rnd = new Random();
+            enemyX[0] = rnd.Next(1, map.GetLength(1) - 1);
+            enemyY[0] = rnd.Next(1, map.GetLength(0) - 1);
+            map[enemyY[0], enemyX[0]] = 'E';
+        }
+        else if (currentLevel == 2)
+        {
+            enemyX = new int[3];
+            enemyY = new int[3];
+            for (int i = 0; i < 3; i++)
+            {
+                Random rnd = new Random();
+                enemyX[i] = rnd.Next(1, map.GetLength(1) - 1);
+                enemyY[i] = rnd.Next(1, map.GetLength(0) - 1);
+                map[enemyY[i], enemyX[i]] = 'E';
+            }
+        }
+        else if (currentLevel == 3)
+        {
+            enemyX = new int[5];
+            enemyY = new int[5];
+            for (int i = 0; i < 5; i++)
+            {
+                Random rnd = new Random();
+                enemyX[i] = rnd.Next(1, map.GetLength(1) - 1);
+                enemyY[i] = rnd.Next(1, map.GetLength(0) - 1);
+                map[enemyY[i], enemyX[i]] = 'E';
+            }
+        }
     }
 
     static void MoveEnemies()
     {
-        Random rnd = new Random();
-        int direction = rnd.Next(1, 5);
-
-        int newEnemyX = enemyX;
-        int newEnemyY = enemyY;
-
-        switch (direction)
+        for (int i = 0; i < enemyX.Length; i++)
         {
-            case 1: // Move up
-                newEnemyY--;
-                break;
-            case 2: // Move down
-                newEnemyY++;
-                break;
-            case 3: // Move left
-                newEnemyX--;
-                break;
-            case 4: // Move right
-                newEnemyX++;
-                break;
-        }
+            Random rnd = new Random();
+            int direction = rnd.Next(1, 5);
 
-        if (map[newEnemyY, newEnemyX] == ' ')
-        {
-            map[enemyY, enemyX] = ' ';
-            enemyX = newEnemyX;
-            enemyY = newEnemyY;
-            map[enemyY, enemyX] = 'E';
+            int newEnemyX = enemyX[i];
+            int newEnemyY = enemyY[i];
+
+            switch (direction)
+            {
+                case 1: // Move up
+                    newEnemyY--;
+                    break;
+                case 2: // Move down
+                    newEnemyY++;
+                    break;
+                case 3: // Move left
+                    newEnemyX--;
+                    break;
+                case 4: // Move right
+                    newEnemyX++;
+                    break;
+            }
+
+            if (map[newEnemyY, newEnemyX] == ' ')
+            {
+                map[enemyY[i], enemyX[i]] = ' ';
+                enemyX[i] = newEnemyX;
+                enemyY[i] = newEnemyY;
+                map[enemyY[i], enemyX[i]] = 'E';
+            }
         }
     }
 
@@ -232,7 +264,6 @@ class Program
 
     static void PlayerHitEnemy()
     {
-        map[playerY, playerX] = ' ';
         playerHealth--;
         healthColor = ConsoleColor.Green;
 
@@ -241,7 +272,6 @@ class Program
             GameOver();
         }
     }
-
 
     static void DrawMap()
     {
@@ -288,12 +318,6 @@ class Program
 
         Console.SetCursorPosition(0, 23);
         Console.Write($"Talisman: {talismanCount}");
-
-
-        if (map[playerY, playerX] != 'X')
-        {
-            map[playerY, playerX] = ' ';
-        }
     }
 
     static void GameOver()
