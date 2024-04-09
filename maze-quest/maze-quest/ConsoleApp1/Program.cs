@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 class Program
 {
@@ -67,16 +67,16 @@ class Program
 
         switch (direction)
         {
-            case 1: 
+            case 1: // Move up
                 newEnemyY--;
                 break;
-            case 2: 
+            case 2: // Move down
                 newEnemyY++;
                 break;
-            case 3:
+            case 3: // Move left
                 newEnemyX--;
                 break;
-            case 4: 
+            case 4: // Move right
                 newEnemyX++;
                 break;
         }
@@ -90,13 +90,12 @@ class Program
         }
     }
 
-static void InitializeCaveMap()
+    static void InitializeCaveMap()
     {
         Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine("1. pálya - Barlang");
 
         map = new char[21, 41];
-
 
         for (int i = 0; i < 21; i++)
         {
@@ -117,10 +116,7 @@ static void InitializeCaveMap()
             }
         }
 
-
         map[playerY, playerX] = 'X';
-
-
         map[18, 20] = 'O';
     }
 
@@ -131,7 +127,6 @@ static void InitializeCaveMap()
 
         map = new char[21, 41];
 
-
         for (int i = 0; i < 21; i++)
         {
             for (int j = 0; j < 41; j++)
@@ -151,10 +146,7 @@ static void InitializeCaveMap()
             }
         }
 
-
         map[playerY, playerX] = 'X';
-
-
         map[2, 20] = 'O';
     }
 
@@ -165,7 +157,6 @@ static void InitializeCaveMap()
 
         map = new char[21, 41];
 
-
         for (int i = 0; i < 21; i++)
         {
             for (int j = 0; j < 41; j++)
@@ -185,56 +176,8 @@ static void InitializeCaveMap()
             }
         }
 
-
         map[playerY, playerX] = 'X';
-
-
         map[10, 2] = 'O';
-    }
-
-    static void DrawMap()
-    {
-        Console.SetCursorPosition(0, 0);
-
-        for (int i = 0; i < 21; i++)
-        {
-            for (int j = 0; j < 41; j++)
-            {
-                if (map[i, j] == 'X')
-                {
-                    Console.ForegroundColor = playerColor;
-                }
-                else if (map[i, j] == 'O')
-                {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                }
-                else if (map[i, j] == '#')
-                {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                }
-                else
-                {
-                    Console.ResetColor();
-                }
-                Console.Write(map[i, j]);
-            }
-            Console.WriteLine();
-        }
-
-
-        Console.ForegroundColor = healthColor;
-        Console.SetCursorPosition(0, 22);
-        Console.Write("Health: ");
-        for (int i = 0; i < playerHealth; i++)
-        {
-            Console.Write("█");
-        }
-        Console.ResetColor();
-        Console.WriteLine();
-
-
-        Console.SetCursorPosition(0, 23);
-        Console.Write($"Talisman: {talismanCount}");
     }
 
     static void MovePlayer(ConsoleKey key)
@@ -270,36 +213,15 @@ static void InitializeCaveMap()
                 break;
         }
 
-
-        if (map[playerY, playerX] == 'O')
-        {
-
-            currentLevel++;
-            if (currentLevel > 3)
-                currentLevel = 1;
-
-            talismanCount = 0;
-
-            switch (currentLevel)
-            {
-                case 1:
-                    InitializeCaveMap();
-                    break;
-                case 2:
-                    InitializeJungleMap();
-                    break;
-                case 3:
-                    InitializeDesertMap();
-                    break;
-            }
-
-            DrawMap();
-            return;
-        }
-
         if (map[playerY, playerX] == 'E')
         {
             PlayerHitEnemy();
+        }
+        else if (map[playerY, playerX] == 'O')
+        {
+            talismanCount++;
+            map[prevPlayerY, prevPlayerX] = ' ';
+            map[playerY, playerX] = 'X';
         }
         else
         {
@@ -310,16 +232,67 @@ static void InitializeCaveMap()
 
     static void PlayerHitEnemy()
     {
-
+        map[playerY, playerX] = ' ';
         playerHealth--;
-
-        talismanCount++;
-
         healthColor = ConsoleColor.Green;
 
         if (playerHealth <= 0)
         {
             GameOver();
+        }
+    }
+
+
+    static void DrawMap()
+    {
+        Console.SetCursorPosition(0, 0);
+
+        for (int i = 0; i < 21; i++)
+        {
+            for (int j = 0; j < 41; j++)
+            {
+                if (map[i, j] == 'X')
+                {
+                    Console.ForegroundColor = playerColor;
+                }
+                else if (map[i, j] == 'E')
+                {
+                    Console.ForegroundColor = enemyColor;
+                }
+                else if (map[i, j] == 'O')
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+                else if (map[i, j] == '#')
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+                else
+                {
+                    Console.ResetColor();
+                }
+                Console.Write(map[i, j]);
+            }
+            Console.WriteLine();
+        }
+
+        Console.ForegroundColor = healthColor;
+        Console.SetCursorPosition(0, 22);
+        Console.Write("Health: ");
+        for (int i = 0; i < playerHealth; i++)
+        {
+            Console.Write("█");
+        }
+        Console.ResetColor();
+        Console.WriteLine();
+
+        Console.SetCursorPosition(0, 23);
+        Console.Write($"Talisman: {talismanCount}");
+
+
+        if (map[playerY, playerX] != 'X')
+        {
+            map[playerY, playerX] = ' ';
         }
     }
 
