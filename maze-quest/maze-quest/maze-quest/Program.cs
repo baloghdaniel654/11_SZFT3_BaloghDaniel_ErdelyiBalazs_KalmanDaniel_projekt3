@@ -165,7 +165,9 @@ class Program
         }
 
         gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
-        gameState.Map[18, 20] = 'O';
+        gameState.Map[18, 20] = 'O'; //Zöld talizmán
+        //gameState.Map[5, 15] = 'R';  // Piros talizmán
+        gameState.Map[1, 39] = 'G';  // Kapu
     }
 
     static void InitializeJungleMap()
@@ -198,7 +200,9 @@ class Program
         }
 
         gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
-        gameState.Map[2, 20] = 'O';
+        gameState.Map[2, 20] = 'O';  //Zöld talizmán
+        //gameState.Map[15, 30] = 'R'; // Piros talizmán
+        gameState.Map[19, 1] = 'G';  // Kapu
     }
 
     static void InitializeDesertMap()
@@ -231,7 +235,9 @@ class Program
         }
 
         gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
-        gameState.Map[10, 2] = 'O';
+        gameState.Map[10, 2] = 'O';  // Zöld talizmán
+        //gameState.Map[10, 30] = 'R'; // Piros talizmán
+        gameState.Map[1, 1] = 'G';   // Kapu
     }
 
     static void MovePlayer(ConsoleKey key)
@@ -277,6 +283,34 @@ class Program
             gameState.Map[prevPlayerY, prevPlayerX] = ' ';
             gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
         }
+        else if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'R')
+        {
+            gameState.TalismanCount = Math.Max(0, gameState.TalismanCount - 1);
+            gameState.Map[prevPlayerY, prevPlayerX] = ' ';
+            gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
+        }
+        else if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'G')
+        {
+            gameState.CurrentLevel++;
+            if (gameState.CurrentLevel > 3)
+            {
+                Console.Clear();
+                Console.WriteLine("Gratulálunk! Minden szintet teljesített!");
+                Environment.Exit(0);
+            }
+            else
+            {
+                switch (gameState.CurrentLevel)
+                {
+                    case 2:
+                        InitializeJungleMap();
+                        break;
+                    case 3:
+                        InitializeDesertMap();
+                        break;
+                }
+            }
+        }
         else
         {
             gameState.Map[prevPlayerY, prevPlayerX] = ' ';
@@ -315,6 +349,14 @@ class Program
                 {
                     Console.ForegroundColor = ConsoleColor.Magenta;
                 }
+                else if (gameState.Map[i, j] == 'R')
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else if (gameState.Map[i, j] == 'G')
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                }
                 else if (gameState.Map[i, j] == '#')
                 {
                     Console.ForegroundColor = ConsoleColor.Gray;
@@ -330,7 +372,7 @@ class Program
 
         Console.ForegroundColor = gameState.HealthColor;
         Console.SetCursorPosition(0, 22);
-        Console.Write("Health: ");
+        Console.Write("Élet: ");
         for (int i = 0; i < gameState.PlayerHealth; i++)
         {
             Console.Write("█");
@@ -339,7 +381,7 @@ class Program
         Console.WriteLine();
 
         Console.SetCursorPosition(0, 23);
-        Console.Write($"Talisman: {gameState.TalismanCount}");
+        Console.Write($"Talizmán: {gameState.TalismanCount}");
     }
 
     static void GameOver()
@@ -361,18 +403,8 @@ class Program
                     gameState.PlayerY = 10;
                     gameState.PlayerHealth = 10;
                     gameState.TalismanCount = 0;
-                    switch (gameState.CurrentLevel)
-                    {
-                        case 1:
-                            InitializeCaveMap();
-                            break;
-                        case 2:
-                            InitializeJungleMap();
-                            break;
-                        case 3:
-                            InitializeDesertMap();
-                            break;
-                    }
+                    gameState.CurrentLevel = 1;
+                    InitializeCaveMap();
                     return;
                 case ConsoleKey.D2:
                     Environment.Exit(0);
