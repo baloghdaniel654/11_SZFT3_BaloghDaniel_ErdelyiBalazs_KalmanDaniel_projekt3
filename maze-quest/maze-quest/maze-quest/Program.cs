@@ -1,18 +1,9 @@
 ﻿using System;
+using maze_quest_class;
 
 class Program
 {
-    static int playerX = 10;
-    static int playerY = 10;
-    static int playerHealth = 10;
-    static int talismanCount = 0;
-    static int currentLevel = 1;
-    static char[,] map;
-    static ConsoleColor playerColor = ConsoleColor.Blue;
-    static ConsoleColor enemyColor = ConsoleColor.Red;
-    static ConsoleColor healthColor = ConsoleColor.Green;
-    static int[] enemyX;
-    static int[] enemyY;
+    static vars gameState = new vars();
 
     static void Main(string[] args)
     {
@@ -37,12 +28,12 @@ class Program
                     break;
             }
         }
-        
+
         Console.CursorVisible = false;
 
         while (true)
         {
-            switch (currentLevel)
+            switch (gameState.CurrentLevel)
             {
                 case 1:
                     InitializeCaveMap();
@@ -73,50 +64,50 @@ class Program
 
     static void InitializeEnemies()
     {
-        if (currentLevel == 1)
+        Random rnd = new Random();
+
+        if (gameState.CurrentLevel == 1)
         {
-            enemyX = new int[1];
-            enemyY = new int[1];
-            Random rnd = new Random();
-            enemyX[0] = rnd.Next(1, map.GetLength(1) - 1);
-            enemyY[0] = rnd.Next(1, map.GetLength(0) - 1);
-            map[enemyY[0], enemyX[0]] = 'E';
+            gameState.EnemyX = new int[1];
+            gameState.EnemyY = new int[1];
+            gameState.EnemyX[0] = rnd.Next(1, gameState.Map.GetLength(1) - 1);
+            gameState.EnemyY[0] = rnd.Next(1, gameState.Map.GetLength(0) - 1);
+            gameState.Map[gameState.EnemyY[0], gameState.EnemyX[0]] = 'E';
         }
-        else if (currentLevel == 2)
+        else if (gameState.CurrentLevel == 2)
         {
-            enemyX = new int[3];
-            enemyY = new int[3];
+            gameState.EnemyX = new int[3];
+            gameState.EnemyY = new int[3];
             for (int i = 0; i < 3; i++)
             {
-                Random rnd = new Random();
-                enemyX[i] = rnd.Next(1, map.GetLength(1) - 1);
-                enemyY[i] = rnd.Next(1, map.GetLength(0) - 1);
-                map[enemyY[i], enemyX[i]] = 'E';
+                gameState.EnemyX[i] = rnd.Next(1, gameState.Map.GetLength(1) - 1);
+                gameState.EnemyY[i] = rnd.Next(1, gameState.Map.GetLength(0) - 1);
+                gameState.Map[gameState.EnemyY[i], gameState.EnemyX[i]] = 'E';
             }
         }
-        else if (currentLevel == 3)
+        else if (gameState.CurrentLevel == 3)
         {
-            enemyX = new int[5];
-            enemyY = new int[5];
+            gameState.EnemyX = new int[5];
+            gameState.EnemyY = new int[5];
             for (int i = 0; i < 5; i++)
             {
-                Random rnd = new Random();
-                enemyX[i] = rnd.Next(1, map.GetLength(1) - 1);
-                enemyY[i] = rnd.Next(1, map.GetLength(0) - 1);
-                map[enemyY[i], enemyX[i]] = 'E';
+                gameState.EnemyX[i] = rnd.Next(1, gameState.Map.GetLength(1) - 1);
+                gameState.EnemyY[i] = rnd.Next(1, gameState.Map.GetLength(0) - 1);
+                gameState.Map[gameState.EnemyY[i], gameState.EnemyX[i]] = 'E';
             }
         }
     }
 
     static void MoveEnemies()
     {
-        for (int i = 0; i < enemyX.Length; i++)
+        Random rnd = new Random();
+
+        for (int i = 0; i < gameState.EnemyX.Length; i++)
         {
-            Random rnd = new Random();
             int direction = rnd.Next(1, 5);
 
-            int newEnemyX = enemyX[i];
-            int newEnemyY = enemyY[i];
+            int newEnemyX = gameState.EnemyX[i];
+            int newEnemyY = gameState.EnemyY[i];
 
             switch (direction)
             {
@@ -134,12 +125,12 @@ class Program
                     break;
             }
 
-            if (map[newEnemyY, newEnemyX] == ' ')
+            if (gameState.Map[newEnemyY, newEnemyX] == ' ')
             {
-                map[enemyY[i], enemyX[i]] = ' ';
-                enemyX[i] = newEnemyX;
-                enemyY[i] = newEnemyY;
-                map[enemyY[i], enemyX[i]] = 'E';
+                gameState.Map[gameState.EnemyY[i], gameState.EnemyX[i]] = ' ';
+                gameState.EnemyX[i] = newEnemyX;
+                gameState.EnemyY[i] = newEnemyY;
+                gameState.Map[gameState.EnemyY[i], gameState.EnemyX[i]] = 'E';
             }
         }
     }
@@ -152,7 +143,7 @@ class Program
         Console.WriteLine("1. pálya - Barlang");
         System.Threading.Thread.Sleep(3000);
 
-        map = new char[21, 41];
+        gameState.Map = new char[21, 41];
 
         for (int i = 0; i < 21; i++)
         {
@@ -160,21 +151,21 @@ class Program
             {
                 if ((i == 0 || i == 20) && (j >= 0 && j < 41))
                 {
-                    map[i, j] = '#';
+                    gameState.Map[i, j] = '#';
                 }
                 else if ((j == 0 || j == 40) && (i >= 0 && i < 21))
                 {
-                    map[i, j] = '#';
+                    gameState.Map[i, j] = '#';
                 }
                 else
                 {
-                    map[i, j] = ' ';
+                    gameState.Map[i, j] = ' ';
                 }
             }
         }
 
-        map[playerY, playerX] = 'X';
-        map[18, 20] = 'O';
+        gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
+        gameState.Map[18, 20] = 'O';
     }
 
     static void InitializeJungleMap()
@@ -185,7 +176,7 @@ class Program
         Console.WriteLine("2. pálya - Dzsungel");
         System.Threading.Thread.Sleep(3000);
 
-        map = new char[21, 41];
+        gameState.Map = new char[21, 41];
 
         for (int i = 0; i < 21; i++)
         {
@@ -193,21 +184,21 @@ class Program
             {
                 if ((i == 0 || i == 20) && (j >= 0 && j < 41))
                 {
-                    map[i, j] = '#';
+                    gameState.Map[i, j] = '#';
                 }
                 else if ((j == 0 || j == 40) && (i >= 0 && i < 21))
                 {
-                    map[i, j] = '#';
+                    gameState.Map[i, j] = '#';
                 }
                 else
                 {
-                    map[i, j] = ' ';
+                    gameState.Map[i, j] = ' ';
                 }
             }
         }
 
-        map[playerY, playerX] = 'X';
-        map[2, 20] = 'O';
+        gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
+        gameState.Map[2, 20] = 'O';
     }
 
     static void InitializeDesertMap()
@@ -218,7 +209,7 @@ class Program
         Console.WriteLine("3. pálya - Sivatag");
         System.Threading.Thread.Sleep(3000);
 
-        map = new char[21, 41];
+        gameState.Map = new char[21, 41];
 
         for (int i = 0; i < 21; i++)
         {
@@ -226,79 +217,79 @@ class Program
             {
                 if ((i == 0 || i == 20) && (j >= 0 && j < 41))
                 {
-                    map[i, j] = '#';
+                    gameState.Map[i, j] = '#';
                 }
                 else if ((j == 0 || j == 40) && (i >= 0 && i < 21))
                 {
-                    map[i, j] = '#';
+                    gameState.Map[i, j] = '#';
                 }
                 else
                 {
-                    map[i, j] = ' ';
+                    gameState.Map[i, j] = ' ';
                 }
             }
         }
 
-        map[playerY, playerX] = 'X';
-        map[10, 2] = 'O';
+        gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
+        gameState.Map[10, 2] = 'O';
     }
 
     static void MovePlayer(ConsoleKey key)
     {
-        int prevPlayerX = playerX;
-        int prevPlayerY = playerY;
+        int prevPlayerX = gameState.PlayerX;
+        int prevPlayerY = gameState.PlayerY;
 
         switch (key)
         {
             case ConsoleKey.W:
-                if (map[playerY - 1, playerX] != '#')
+                if (gameState.Map[gameState.PlayerY - 1, gameState.PlayerX] != '#')
                 {
-                    playerY--;
+                    gameState.PlayerY--;
                 }
                 break;
             case ConsoleKey.S:
-                if (map[playerY + 1, playerX] != '#')
+                if (gameState.Map[gameState.PlayerY + 1, gameState.PlayerX] != '#')
                 {
-                    playerY++;
+                    gameState.PlayerY++;
                 }
                 break;
             case ConsoleKey.A:
-                if (map[playerY, playerX - 1] != '#')
+                if (gameState.Map[gameState.PlayerY, gameState.PlayerX - 1] != '#')
                 {
-                    playerX--;
+                    gameState.PlayerX--;
                 }
                 break;
             case ConsoleKey.D:
-                if (map[playerY, playerX + 1] != '#')
+                if (gameState.Map[gameState.PlayerY, gameState.PlayerX + 1] != '#')
                 {
-                    playerX++;
+                    gameState.PlayerX++;
                 }
                 break;
         }
 
-        if (map[playerY, playerX] == 'E')
+        if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'E')
         {
             PlayerHitEnemy();
         }
-        else if (map[playerY, playerX] == 'O')
+        else if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'O')
         {
-            talismanCount++;
-            map[prevPlayerY, prevPlayerX] = ' ';
-            map[playerY, playerX] = 'X';
+            gameState.TalismanCount++;
+            gameState.Map[prevPlayerY, prevPlayerX] = ' ';
+            gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
         }
         else
         {
-            map[prevPlayerY, prevPlayerX] = ' ';
-            map[playerY, playerX] = 'X';
+            gameState.Map[prevPlayerY, prevPlayerX] = ' ';
+            gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
         }
     }
 
     static void PlayerHitEnemy()
     {
-        playerHealth--;
-        healthColor = ConsoleColor.Green;
+        gameState.PlayerHealth--;
+        gameState.HealthColor = ConsoleColor.Green;
 
-        if (playerHealth <= 0)
+        if (gameState.PlayerHealth <= 0)
         {
             GameOver();
         }
@@ -312,19 +303,19 @@ class Program
         {
             for (int j = 0; j < 41; j++)
             {
-                if (map[i, j] == 'X')
+                if (gameState.Map[i, j] == 'X')
                 {
-                    Console.ForegroundColor = playerColor;
+                    Console.ForegroundColor = gameState.PlayerColor;
                 }
-                else if (map[i, j] == 'E')
+                else if (gameState.Map[i, j] == 'E')
                 {
-                    Console.ForegroundColor = enemyColor;
+                    Console.ForegroundColor = gameState.EnemyColor;
                 }
-                else if (map[i, j] == 'O')
+                else if (gameState.Map[i, j] == 'O')
                 {
                     Console.ForegroundColor = ConsoleColor.Magenta;
                 }
-                else if (map[i, j] == '#')
+                else if (gameState.Map[i, j] == '#')
                 {
                     Console.ForegroundColor = ConsoleColor.Gray;
                 }
@@ -332,15 +323,15 @@ class Program
                 {
                     Console.ResetColor();
                 }
-                Console.Write(map[i, j]);
+                Console.Write(gameState.Map[i, j]);
             }
             Console.WriteLine();
         }
 
-        Console.ForegroundColor = healthColor;
+        Console.ForegroundColor = gameState.HealthColor;
         Console.SetCursorPosition(0, 22);
         Console.Write("Health: ");
-        for (int i = 0; i < playerHealth; i++)
+        for (int i = 0; i < gameState.PlayerHealth; i++)
         {
             Console.Write("█");
         }
@@ -348,7 +339,7 @@ class Program
         Console.WriteLine();
 
         Console.SetCursorPosition(0, 23);
-        Console.Write($"Talisman: {talismanCount}");
+        Console.Write($"Talisman: {gameState.TalismanCount}");
     }
 
     static void GameOver()
@@ -357,7 +348,7 @@ class Program
         {
             Console.Clear();
             Console.WriteLine("---- Játék vége ----");
-            Console.WriteLine("Pontszám: " + talismanCount);
+            Console.WriteLine("Pontszám: " + gameState.TalismanCount);
             Console.WriteLine("[1] Újraindítás");
             Console.WriteLine("[2] Kilépés");
 
@@ -366,26 +357,23 @@ class Program
             switch (keyInfo.Key)
             {
                 case ConsoleKey.D1:
-                    if (currentLevel == 1)
+                    gameState.PlayerX = 10;
+                    gameState.PlayerY = 10;
+                    gameState.PlayerHealth = 10;
+                    gameState.TalismanCount = 0;
+                    switch (gameState.CurrentLevel)
                     {
-                        InitializeCaveMap();
-                        break;
+                        case 1:
+                            InitializeCaveMap();
+                            break;
+                        case 2:
+                            InitializeJungleMap();
+                            break;
+                        case 3:
+                            InitializeDesertMap();
+                            break;
                     }
-                    else if (currentLevel == 2)
-                    {
-                        InitializeDesertMap();
-                        break;
-                    }
-                    else if (currentLevel == 3)
-                    {
-                        InitializeJungleMap();
-                        break;
-                    }
-                    else 
-                    { 
-                        Environment.Exit(0);
-                        break;
-                    }
+                    return;
                 case ConsoleKey.D2:
                     Environment.Exit(0);
                     break;
