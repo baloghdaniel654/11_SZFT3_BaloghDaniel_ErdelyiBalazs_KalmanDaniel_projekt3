@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using maze_quest_class;
 
 class Program
@@ -58,6 +58,7 @@ class Program
                 Console.Clear();
                 MovePlayer(keyInfo.Key);
                 DrawMap();
+                CheckForCollisions();
             }
         }
     }
@@ -131,6 +132,11 @@ class Program
                 gameState.EnemyX[i] = newEnemyX;
                 gameState.EnemyY[i] = newEnemyY;
                 gameState.Map[gameState.EnemyY[i], gameState.EnemyX[i]] = 'E';
+            }
+
+            if (gameState.EnemyX[i] == gameState.PlayerX && gameState.EnemyY[i] == gameState.PlayerY)
+            {
+                PlayerHitEnemy();
             }
         }
     }
@@ -259,157 +265,4 @@ class Program
                     gameState.PlayerY++;
                 }
                 break;
-            case ConsoleKey.A:
-                if (gameState.Map[gameState.PlayerY, gameState.PlayerX - 1] != '#')
-                {
-                    gameState.PlayerX--;
-                }
-                break;
-            case ConsoleKey.D:
-                if (gameState.Map[gameState.PlayerY, gameState.PlayerX + 1] != '#')
-                {
-                    gameState.PlayerX++;
-                }
-                break;
-        }
-
-        if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'E')
-        {
-            PlayerHitEnemy();
-        }
-        else if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'O')
-        {
-            gameState.TalismanCount++;
-            gameState.Map[prevPlayerY, prevPlayerX] = ' ';
-            gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
-        }
-        else if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'R')
-        {
-            gameState.TalismanCount = Math.Max(0, gameState.TalismanCount - 1);
-            gameState.Map[prevPlayerY, prevPlayerX] = ' ';
-            gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
-        }
-        else if (gameState.Map[gameState.PlayerY, gameState.PlayerX] == 'G')
-        {
-            gameState.CurrentLevel++;
-            if (gameState.CurrentLevel > 3)
-            {
-                Console.Clear();
-                Console.WriteLine("Gratulálunk! Minden szintet teljesített!");
-                Environment.Exit(0);
-            }
-            else
-            {
-                switch (gameState.CurrentLevel)
-                {
-                    case 2:
-                        InitializeJungleMap();
-                        break;
-                    case 3:
-                        InitializeDesertMap();
-                        break;
-                }
-            }
-        }
-        else
-        {
-            gameState.Map[prevPlayerY, prevPlayerX] = ' ';
-            gameState.Map[gameState.PlayerY, gameState.PlayerX] = 'X';
-        }
-    }
-
-    static void PlayerHitEnemy()
-    {
-        gameState.PlayerHealth--;
-        gameState.HealthColor = ConsoleColor.Green;
-
-        if (gameState.PlayerHealth <= 0)
-        {
-            GameOver();
-        }
-    }
-
-    static void DrawMap()
-    {
-        Console.SetCursorPosition(0, 0);
-        Console.WriteLine("---- Maze Quest ----");
-        for (int i = 0; i < 21; i++)
-        {
-            for (int j = 0; j < 41; j++)
-            {
-                if (gameState.Map[i, j] == 'X')
-                {
-                    Console.ForegroundColor = gameState.PlayerColor;
-                }
-                else if (gameState.Map[i, j] == 'E')
-                {
-                    Console.ForegroundColor = gameState.EnemyColor;
-                }
-                else if (gameState.Map[i, j] == 'O')
-                {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                }
-                else if (gameState.Map[i, j] == 'R')
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
-                else if (gameState.Map[i, j] == 'G')
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                }
-                else if (gameState.Map[i, j] == '#')
-                {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                }
-                else
-                {
-                    Console.ResetColor();
-                }
-                Console.Write(gameState.Map[i, j]);
-            }
-            Console.WriteLine();
-        }
-
-        Console.ForegroundColor = gameState.HealthColor;
-        Console.SetCursorPosition(0, 22);
-        Console.Write("Élet: ");
-        for (int i = 0; i < gameState.PlayerHealth; i++)
-        {
-            Console.Write("█");
-        }
-        Console.ResetColor();
-        Console.WriteLine();
-
-        Console.SetCursorPosition(0, 23);
-        Console.Write($"Talizmán: {gameState.TalismanCount}");
-    }
-
-    static void GameOver()
-    {
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine("---- Játék vége ----");
-            Console.WriteLine("Pontszám: " + gameState.TalismanCount);
-            Console.WriteLine("[1] Újraindítás");
-            Console.WriteLine("[2] Kilépés");
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.D1:
-                    gameState.PlayerX = 10;
-                    gameState.PlayerY = 10;
-                    gameState.PlayerHealth = 10;
-                    gameState.TalismanCount = 0;
-                    gameState.CurrentLevel = 1;
-                    InitializeCaveMap();
-                    return;
-                case ConsoleKey.D2:
-                    Environment.Exit(0);
-                    break;
-            }
-        }
-    }
-}
+            case ConsoleKey.A
