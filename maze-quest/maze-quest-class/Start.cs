@@ -17,14 +17,16 @@
             RunGameLoop();
         }
 
-        private void ShowMainMenu()
+        public void ShowMainMenu()
         {
             while (_playing)
             {
                 Console.Clear();
                 Console.WriteLine("---- Maze Quest ----");
+                Console.WriteLine($"Talizmán: {_gameState.TalismanCount}");
                 Console.WriteLine("[1] Játék indítása");
                 Console.WriteLine("[2] Kilépés");
+                Console.WriteLine("[3] Páncél vásárlása (2 talizmán)");
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
@@ -35,6 +37,22 @@
                         break;
                     case ConsoleKey.D2:
                         Environment.Exit(0);
+                        break;
+                    case ConsoleKey.D3:
+                        if (_gameState.TalismanCount >= 2)
+                        {
+                            _gameState.TalismanCount -= 2;
+                            _gameState.PlayerHealth++;
+                            Console.Clear();
+                            Console.WriteLine("Sikeresen növelted 1-el a páncélodat!");
+                            System.Threading.Thread.Sleep(1500);
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Nincs elég talizmánod a vásárláshoz!");
+                            System.Threading.Thread.Sleep(1500);
+                        }
                         break;
                 }
             }
@@ -50,6 +68,7 @@
 
                 var enemyManager = new EnemyManager(_gameState);
                 enemyManager.InitializeEnemies();
+                enemyManager.EnsureEnemyExists();
 
                 while (true)
                 {
@@ -66,6 +85,7 @@
                 }
             }
         }
+
         public void InitializeLevelMap()
         {
             switch (_gameState.CurrentLevel)

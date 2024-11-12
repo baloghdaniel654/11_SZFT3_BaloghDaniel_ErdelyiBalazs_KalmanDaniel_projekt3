@@ -51,7 +51,8 @@
                     {
                         Console.Clear();
                         Console.WriteLine("Gratulálunk! Minden szintet teljesített!");
-                        Environment.Exit(0);
+                        System.Threading.Thread.Sleep(2000);
+                        new Start(_gameState).ShowMainMenu();
                     }
                     else
                     {

@@ -27,6 +27,36 @@
             }
         }
 
+        public void EnsureEnemyExists()
+        {
+            bool enemyExists = false;
+            for (int i = 0; i < _gameState.EnemyX.Length; i++)
+            {
+                if (_gameState.EnemyX[i] != -1 && _gameState.EnemyY[i] != -1)
+                {
+                    enemyExists = true;
+                    break;
+                }
+            }
+
+            if (!enemyExists)
+            {
+                Random rnd = new Random();
+                int enemyX = rnd.Next(1, _gameState.Map.GetLength(1) - 1);
+                int enemyY = rnd.Next(1, _gameState.Map.GetLength(0) - 1);
+
+                while (_gameState.Map[enemyY, enemyX] == '#' || _gameState.Map[enemyY, enemyX] == 'X')
+                {
+                    enemyX = rnd.Next(1, _gameState.Map.GetLength(1) - 1);
+                    enemyY = rnd.Next(1, _gameState.Map.GetLength(0) - 1);
+                }
+
+                _gameState.Map[enemyY, enemyX] = 'E';
+                _gameState.EnemyX[0] = enemyX;
+                _gameState.EnemyY[0] = enemyY;
+            }
+        }
+
         public void MoveEnemies()
         {
             Random rnd = new Random();
@@ -55,6 +85,7 @@
                     if (_gameState.PlayerX == newEnemyX && _gameState.PlayerY == newEnemyY)
                     {
                         _gameState.PlayerHealth -= 5;
+                        _gameState.TalismanCount++;
                         _gameState.Map[_gameState.EnemyY[i], _gameState.EnemyX[i]] = ' ';
                         _gameState.EnemyX[i] = -1;
                         _gameState.EnemyY[i] = -1;
